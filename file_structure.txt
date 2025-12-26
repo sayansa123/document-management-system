@@ -1,0 +1,30 @@
+├── app
+│   ├── main.py
+│
+│   ├── api
+│   │   ├── __init__.py
+│   │   └── endpoints
+│   │       ├── upload.py
+│   │       ├── download.py
+│   │       ├── delete.py
+│   │       ├── search.py
+│   │       └── list.py
+│
+│   ├── services
+│   │   ├── file_service.py      # disk logic
+│   │   ├── sql_service.py       # MySQL logic
+│   │   └── mongo_service.py     # MongoDB logic
+│
+│   ├── database
+│   │   ├── mysql
+│   │   │   ├── database.py
+│   │   │   └── models.py
+│   │   ├── mongodb
+│   │   │   └── configuration.py
+│   │   └── schemas.py
+│
+│   ├── core
+│   │   └── config.py            # constants, paths, settings
+│
+├── uploads
+├── requirements.txt

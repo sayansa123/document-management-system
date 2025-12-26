@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="frontend/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-folder-open"></i> Document Manager</h1>
+            <p class="tagline">Manage your files across MySQL and MongoDB</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="upload"><i class="fas fa-upload"></i> Upload</button>
+            <button class="tab-btn" data-tab="retrieve"><i class="fas fa-list"></i> Retrieve</button>
+            <button class="tab-btn" data-tab="search"><i class="fas fa-search"></i> Search</button>
+            <button class="tab-btn" data-tab="delete"><i class="fas fa-trash"></i> Delete</button>
+            <button class="tab-btn" data-tab="about"><i class="fas fa-info-circle"></i> About</button>
+        </div>
+
+        <div class="tab-content active" id="upload">
+            <h2><i class="fas fa-upload"></i> Upload Document</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="fileInput">Choose File</label>
+                    <div class="file-input-container" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to select a file or drag and drop</p>
+                        <p id="fileName" style="margin-top: 10px; color: #4f46e5; font-weight: 600;"></p>
+                    </div>
+                    <input type="file" id="fileInput" name="file" accept=".pdf,.jpg,.jpeg,.png,.csv">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter file description..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated)</label>
+                    <input type="text" id="tags" name="tags" placeholder="cv, resume, important, etc." required>
+                </div>
+
+                <button type="submit" class="btn" id="uploadBtn">
+                    <i class="fas fa-upload"></i> Upload Document
+                </button>
+            </form>
+            <div id="uploadResult"></div>
+        </div>
+
+        <div class="tab-content" id="retrieve">
+            <h2><i class="fas fa-list"></i> Retrieve Documents</h2>
+            <div class="form-group">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <input type="number" id="pageNumber" value="1" min="1" style="width: 80px;">
+                    <span>Page</span>
+                    <select id="pageLimit" style="width: 100px;">
+                        <option value="10">10 per page</option>
+                        <option value="20">20 per page</option>
+                        <option value="50" selected>50 per page</option>
+                        <option value="100">100 per page</option>
+                    </select>
+                    <button class="btn" id="loadFilesBtn">
+                        <i class="fas fa-sync-alt"></i> Load Files
+                    </button>
+                </div>
+            </div>
+            <div id="filesContainer"></div>
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="pagination-btn" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                <span class="pagination-info" id="pageInfo">Page 1</span>
+                <button class="pagination-btn" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="search">
+            <h2><i class="fas fa-search"></i> Search & Filter</h2>
+            <form id="searchForm" class="search-form">
+                <div>
+                    <label for="searchFileType">File Type</label>
+                    <select id="searchFileType">
+                        <option value="">All Types</option>
+                        <option value="application/pdf">PDF</option>
+                        <option value="image/jpeg">JPEG Image</option>
+                        <option value="image/png">PNG Image</option>
+                        <option value="text/csv">CSV</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="searchFileName">File Name</label>
+                    <input type="text" id="searchFileName" placeholder="Search by name...">
+                </div>
+                <div>
+                    <label for="searchTag">Tag</label>
+                    <input type="text" id="searchTag" placeholder="Enter tag...">
+                </div>
+                <div>
+                    <label for="minSize">Min Size (MB)</label>
+                    <input type="number" id="minSize" min="0" placeholder="0">
+                </div>
+                <div>
+                    <label for="maxSize">Max Size (MB)</label>
+                    <input type="number" id="maxSize" min="0" placeholder="10">
+                </div>
+                <div>
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div>
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate">
+                </div>
+                <div style="grid-column: 1 / -1; display: flex; gap: 10px;">
+                    <button type="submit" class="btn" style="flex: 1;">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="resetSearch" style="flex: 0.5;">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </form>
+            <div id="searchResults"></div>
+        </div>
+
+        <div class="tab-content" id="delete">
+            <h2><i class="fas fa-trash"></i> Delete Document</h2>
+            <div class="form-group">
+                <label for="deleteFileId">File ID to Delete</label>
+                    <input type="number" id="deleteFileId" placeholder="Enter file ID..." min="1">
+                <p style="margin-top: 5px; color: #64748b; font-size: 0.9rem;">Note: This performs a soft delete (file is marked as deleted but not removed)</p>
+            </div>
+            <button class="btn btn-purple" id="deleteBtn">
+                <i class="fas fa-trash"></i> Soft Delete File
+            </button>
+
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                <h3><i class="fas fa-database"></i> Database Operations</h3>
+                <p style="color: #dc2626; margin-bottom: 15px;">Warning: These operations will delete all data</p>
+                <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
+                    <button class="btn btn-danger" id="resetMongoBtn">
+                        <i class="fas fa-fire"></i> Reset MongoDB
+                    </button>
+                    <button class="btn btn-danger" id="resetMySQLBtn">
+                        <i class="fas fa-fire"></i> Reset MySQL
+                    </button>
+                    <button class="btn btn-danger" id="resetLocalBtn">
+                        <i class="fas fa-folder"></i> Reset Local Files
+                    </button>
+                    
+                </div>
+            </div>
+            <div id="deleteResult" style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="tab-content" id="about">
+            <h2><i class="fas fa-info-circle"></i> About Document Manager</h2>
+            <div style="background: #f0f9ff; padding: 25px; border-radius: 10px; border-left: 4px solid #0ea5e9;">
+                <h3 style="color: #0369a1; margin-bottom: 15px;">💡 What this project is:</h3>
+                <p style="margin-bottom: 10px; line-height: 1.6;">A backend system where:</p>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li style="margin-bottom: 10px; padding-left: 25px; position: relative;">
+                        <i class="fas fa-user-upload" style="position: absolute; left: 0; color: #0ea5e9;"></i>
+                        1. Users upload files (PDF, images, CSV)
+                    </li>
+                    <li style="margin-bottom: 10px; padding-left: 25px; position: relative;">
+                        <i class="fas fa-database" style="position: absolute; left: 0; color: #0ea5e9;"></i>
+                        2. Metadata goes to MySQL
+                    </li>
+                    <li style="margin-bottom: 10px; padding-left: 25px; position: relative;">
+                        <i class="fas fa-server" style="position: absolute; left: 0; color: #0ea5e9;"></i>
+                        3. File + flexible data goes to MongoDB
+                    </li>
+                    <li style="margin-bottom: 10px; padding-left: 25px; position: relative;">
+                        <i class="fas fa-save" style="position: absolute; left: 0; color: #0ea5e9;"></i>
+                        4. Files are stored on disk (or cloud later)
+                    </li>
+                    <li style="margin-bottom: 10px; padding-left: 25px; position: relative;">
+                        <i class="fas fa-chart-bar" style="position: absolute; left: 0; color: #0ea5e9;"></i>
+                        5. Admin can analyze uploads
+                    </li>
+                </ul>
+                <div style="margin-top: 30px; padding: 20px; background: white; border-radius: 8px; border: 2px solid #e2e8f0;">
+                    <h4 style="color: #475569; margin-bottom: 15px;">API Endpoints:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                            <code style="color: #4f46e5; font-weight: 600;">POST /document/upload</code>
+                            <p style="font-size: 0.9rem; color: #64748b; margin-top: 5px;">Upload files with metadata</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                            <code style="color: #4f46e5; font-weight: 600;">GET /document/retrival</code>
+                            <p style="font-size: 0.9rem; color: #64748b; margin-top: 5px;">Retrieve documents with pagination</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                            <code style="color: #4f46e5; font-weight: 600;">GET /document/searching_Filtering</code>
+                            <p style="font-size: 0.9rem; color: #64748b; margin-top: 5px;">Search and filter documents</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                            <code style="color: #4f46e5; font-weight: 600;">DELETE /document/delete/{id}</code>
+                            <p style="font-size: 0.9rem; color: #64748b; margin-top: 5px;">Soft delete a document</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="frontend/script.js"></script>
+</body>
+</html>
