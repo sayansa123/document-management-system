@@ -213,3 +213,78 @@ http://localhost:8000/docs
 **Sayan Sarkar**  
 Backend Developer  
 FastAPI • MySQL • MongoDB
+
+---
+
+## 📸 API Snapshots
+
+### 1️⃣ Initial State (No Data)
+_No records in SQL, MongoDB, or local file storage._
+<p align="center">
+  <img src="images/01_empty_state.png" width="800">
+</p>
+
+---
+
+### 2️⃣ File Upload
+_Multipart file upload with metadata stored across disk, MySQL, and MongoDB._
+<p align="center">
+  <img src="images/02_file_upload.png" width="800">
+</p>
+
+---
+
+### 3️⃣ File Retrieval (After Upload)
+_Retrieving uploaded files with merged SQL + MongoDB response._
+<p align="center">
+  <img src="images/03_retrieval_with_files.png" width="800">
+</p>
+
+---
+
+### 4️⃣ Search & Filtering
+_Searching documents using filters such as file name, type, date range, and tags._
+<p align="center">
+  <img src="images/04_search_filtering.png" width="800">
+</p>
+
+---
+
+### 5️⃣ Soft Delete Operation
+_Soft deleting a file using logical deletion (`is_deleted = true`) and file renaming._
+<p align="center">
+  <img src="images/05_soft_delete.png" width="800">
+</p>
+
+---
+
+### 6️⃣ Retrieval After Soft Delete
+_Verifying deleted files are excluded from standard retrieval queries._
+<p align="center">
+  <img src="images/06_retrieval_after_delete.png" width="800">
+</p>
+
+---
+
+### 7️⃣ About Endpoint
+_Project overview and backend description exposed via FastAPI._
+<p align="center">
+  <img src="images/07_about_section.png" width="800">
+</p>
+
+---
+
+### 8️⃣ SQL Database Only Retrieval
+_Retrieving structured metadata directly from MySQL via FastAPI._
+<p align="center">
+  <img src="images/08_sql_only_retrieval.png" width="800">
+</p>
+
+---
+
+### 9️⃣ MongoDB Only Retrieval
+_Retrieving flexible metadata (tags & description) from MongoDB via FastAPI._
+<p align="center">
+  <img src="images/09_mongodb_only_retrieval.png" width="800">
+</p>
+
